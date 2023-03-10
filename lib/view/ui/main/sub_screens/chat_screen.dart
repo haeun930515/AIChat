@@ -1,4 +1,5 @@
 import 'package:chatai/provider/firebase_api.dart';
+import 'package:chatai/view/ui/main/main_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -72,6 +73,7 @@ class ChatsScreenState extends State<ChatsScreen> {
                                         name: p.name,
                                         roomNum: index,
                                       ),
+                                      child: const MainScreen(),
                                     ))),
                           );
                           setState(() {
