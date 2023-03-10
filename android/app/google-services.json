@@ -1,0 +1,119 @@
+{
+  "project_info": {
+    "project_number": "896145225303",
+    "firebase_url": "https://copyui-82583-default-rtdb.firebaseio.com",
+    "project_id": "copyui-82583",
+    "storage_bucket": "copyui-82583.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896145225303:android:ccd3752524c73d26e21512",
+        "android_client_info": {
+          "package_name": "com.example.chatai"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "896145225303-2tfr03ub9rdupkkd0f5gel75ugssqkgd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrtnRgU0BSmCYzJXgkzbwk48zCzdEsTus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "896145225303-2tfr03ub9rdupkkd0f5gel75ugssqkgd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "896145225303-1pqjeqp3n1f9ufiupn423ogdlqa0l3m5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatai"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896145225303:android:58a1f64fab52c049e21512",
+        "android_client_info": {
+          "package_name": "com.example.copyui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "896145225303-2tfr03ub9rdupkkd0f5gel75ugssqkgd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrtnRgU0BSmCYzJXgkzbwk48zCzdEsTus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "896145225303-2tfr03ub9rdupkkd0f5gel75ugssqkgd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "896145225303-1pqjeqp3n1f9ufiupn423ogdlqa0l3m5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatai"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:896145225303:android:ae7c569153d2f095e21512",
+        "android_client_info": {
+          "package_name": "com.example.edittext"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "896145225303-2tfr03ub9rdupkkd0f5gel75ugssqkgd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrtnRgU0BSmCYzJXgkzbwk48zCzdEsTus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "896145225303-2tfr03ub9rdupkkd0f5gel75ugssqkgd.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "896145225303-1pqjeqp3n1f9ufiupn423ogdlqa0l3m5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatai"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
