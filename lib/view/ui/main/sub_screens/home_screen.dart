@@ -1,7 +1,11 @@
 import 'dart:async';
 
+import 'package:chatai/controller/chat_controller.dart';
+import 'package:chatai/provider/chat_api.dart';
 import 'package:chatai/provider/firebase_api.dart';
+import 'package:chatai/repository/chat_repository.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../../../model/chat_model.dart';
 import '../widgets/chatList_widget.dart';
@@ -44,6 +48,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(ChatController(
+        repository: ChatRepository(apiClient: ChatAPIService())));
     var p = Provider.of<FirebaseService>(context);
     Future.microtask(() {
       p.load();
@@ -107,11 +113,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {
+                  onTap: () async {
                     var text = sendController.text;
-                    //ChatAPIService().getChat(text);
+                    var md = await Get.find<ChatController>().getAnswer(text);
                     sendController.text = '';
-                    p.SendMessage(text, 'aitext test');
+                    p.SendMessage(text, md);
                   },
                   child: const Padding(
                     padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
