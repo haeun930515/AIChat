@@ -4,7 +4,8 @@ import 'package:http/http.dart' as http;
 
 class ChatAPIService {
   Map<String, String> headers = {
-    "Authorization": "하단 auth key 입력 후 테스트 가능",
+    "Authorization":
+        "Bearer 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",
     "Content-Type": "application/json"
   };
 
