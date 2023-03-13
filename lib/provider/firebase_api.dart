@@ -16,8 +16,26 @@ class FirebaseService extends ChangeNotifier {
     required this.roomNum,
   });
 
+  Future<List<ChatModel>> getPreviousChats(int roomNum) async {
+    chattingList = <ChatModel>[];
+    final snapshot = await firebase
+        .collection('ChatRoom$roomNum')
+        .orderBy('uploadTime', descending: true)
+        .get();
+    try {
+      for (var doc in snapshot.docs) {
+        final chat = ChatModel.fromJson(doc.data());
+        chattingList.add(chat);
+      }
+      return chattingList;
+    } catch (e) {
+      print('Error getting previous chats: $e');
+      return [];
+    }
+  }
+
   // 메시지 전송
-  Future SendMessage(String usertext, String aitext) async {
+  Future<void> SendMessage(String usertext, String aitext) async {
     var now = DateTime.now().millisecondsSinceEpoch;
     await firebase
         .collection("ChatRoom$roomNum")
@@ -36,12 +54,25 @@ class FirebaseService extends ChangeNotifier {
 
   // 채팅방 삭제
   void DelChatRoom(int roomNum) async {
-    await firebase.collection("ChatRoom$roomNum").get().then((snapshot) {
-      for (DocumentSnapshot doc in snapshot.docs) {
-        doc.reference.delete();
+    try {
+      chattingList = <ChatModel>[];
+      QuerySnapshot snapshot =
+          await firebase.collection("ChatRoom$roomNum").get();
+      List<QueryDocumentSnapshot> docs = snapshot.docs;
+      for (QueryDocumentSnapshot doc in docs) {
+        await doc.reference
+            .collection("ChatRoom$roomNum")
+            .get()
+            .then((subsnapshot) {
+          for (DocumentSnapshot subdoc in subsnapshot.docs) {
+            subdoc.reference.delete();
+          }
+        });
+        await doc.reference.delete();
       }
-    });
-    await firebase.collection("ChatRoom$roomNum").doc().delete();
+    } catch (e) {
+      print('Error deleting chat room: $e');
+    }
   }
 
   Stream<QuerySnapshot> getSnapshot() {
@@ -88,7 +119,7 @@ class FirebaseService extends ChangeNotifier {
     return count;
   }
 
-  Future<Object> RoomTitle(int index) async {
+  Future<String> RoomTitle(int index) async {
     QuerySnapshot r = await FirebaseFirestore.instance
         .collection('users')
         .doc(id)
@@ -96,15 +127,7 @@ class FirebaseService extends ChangeNotifier {
         .orderBy('uploadTime', descending: true)
         .limit(1)
         .get();
-    String l;
-    if (r.docs.isNotEmpty) {
-      // 데이터가 있을 경우
-      l = r.docs.first.get('usertext');
-    } else {
-      // 데이터가 없을 경우
-      l = '대화가 없습니다.';
-    }
-    return l;
+    return r.docs.isNotEmpty ? r.docs.first.get('usertext') : '대화가 없습니다.';
   }
 
   Stream<DocumentSnapshot<Object?>> listenToChatRooms() {

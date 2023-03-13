@@ -7,7 +7,6 @@ import 'package:chatai/repository/chat_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import '../../../../model/chat_model.dart';
 import '../widgets/chatList_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -22,48 +21,45 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   late TextEditingController sendController;
   late StreamSubscription streamSubscription;
-
-  bool firstLoad = true;
+  late FirebaseService p;
 
   @override
   void initState() {
     sendController = TextEditingController();
-    var p = Provider.of<FirebaseService>(context, listen: false);
+    p = Provider.of<FirebaseService>(context, listen: false);
     streamSubscription = p.getSnapshot().listen((event) {
-      if (firstLoad) {
-        firstLoad = false;
-        return;
-      }
-      p.addOne(
-          ChatModel.fromJson(event.docs[0].data() as Map<String, dynamic>));
+      //   Future.microtask(() {
+      //     p.load();
+      //   });
+      p.getPreviousChats(p.roomNum).then((chats) {
+        if (chats.isNotEmpty) {
+          setState(() {});
+        }
+      });
+      // p.addOne(
+      //     ChatModel.fromJson(event.docs[0].data() as Map<String, dynamic>));
     });
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   streamSubscription.cancel();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    sendController.dispose();
+    streamSubscription.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     Get.put(ChatController(
         repository: ChatRepository(apiClient: ChatAPIService())));
     var p = Provider.of<FirebaseService>(context);
-    Future.microtask(() {
-      p.load();
-    });
     return Scaffold(
       appBar: AppBar(
         title: const Text('채팅'),
         actions: [
           IconButton(
-            onPressed: () {
-              setState(() {
-                p.CreateRoom();
-              });
-            },
+            onPressed: p.CreateRoom,
             icon: const Icon(Icons.navigate_next),
           ),
         ],
@@ -113,11 +109,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: () async {
                     var text = sendController.text;
-                    var md = await Get.find<ChatController>().getAnswer(text);
+                    //var md = await Get.find<ChatController>().getAnswer(text);
                     sendController.text = '';
-                    p.SendMessage(text, md);
+                    p.SendMessage(text, 'md');
                   },
                   child: const Padding(
                     padding: EdgeInsets.fromLTRB(15, 5, 15, 5),

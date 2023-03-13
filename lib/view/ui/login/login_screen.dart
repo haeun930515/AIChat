@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 // 로그인 화면
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -15,22 +15,24 @@ class ChatsScreen extends StatefulWidget {
 
 class ChatsScreenState extends State<ChatsScreen> {
   int maxRoomNum = 10;
+  late FirebaseService p;
+  late Stream<DocumentSnapshot> chatRoomsStream;
 
   @override
   void didChangeDependencies() {
-    Provider.of<FirebaseService>(context, listen: false).listenToChatRooms();
     super.didChangeDependencies();
+    p = Provider.of<FirebaseService>(context, listen: false);
+    chatRoomsStream = p.listenToChatRooms();
   }
 
   @override
   Widget build(BuildContext context) {
-    var p = Provider.of<FirebaseService>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('채팅방'),
       ),
-      body: StreamBuilder<DocumentSnapshot<Object?>>(
-        stream: p.listenToChatRooms(),
+      body: StreamBuilder<DocumentSnapshot>(
+        stream: chatRoomsStream,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -64,7 +66,6 @@ class ChatsScreenState extends State<ChatsScreen> {
                               bottomRight: Radius.circular(0))),
                       child: ListTile(
                         onTap: () {
-                          // 화면 전환 필요!
                           Navigator.of(context).push(
                             MaterialPageRoute(
                                 builder: ((context) => ChangeNotifierProvider(
@@ -76,24 +77,30 @@ class ChatsScreenState extends State<ChatsScreen> {
                                       child: const MainScreen(),
                                     ))),
                           );
-                          setState(() {
-                            p.roomNum = index;
-                          });
-                          //Get.toNamed()
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (context) => const HomeScreen(),
-                          //   ),
-                          // );
                         },
                         trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => p.DelChatRoom(index),
+                            icon: const Icon(Icons.delete),
+                            onPressed: () => {
+                                  p.DelChatRoom(index),
+                                  setState(() {}),
+                                }),
+                        title: FutureBuilder<String>(
+                          future: p.RoomTitle(index),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return const Text('에러 발생');
+                            } else {
+                              return Text(
+                                snapshot.data!,
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 18),
+                              );
+                            }
+                          },
                         ),
-                        // 내용이 보이게 수정해야 함
-                        title: Text('채팅 내용 $index 번째',
-                            style: const TextStyle(
-                                color: Colors.white, fontSize: 18)),
                       ),
                     ),
                   ],
