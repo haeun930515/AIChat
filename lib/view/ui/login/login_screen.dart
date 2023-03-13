@@ -14,18 +14,14 @@ class LoginScreen extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: Center(child: GetBuilder<LoginController>(
-          builder: (_) {
-            return MaterialButton(
-              color: Colors.yellow,
-              onPressed: () async {
-                Get.find<LoginController>().kakaoLogin(context);
-              },
-              child: const Text('Kakao Login'),
-            );
-          },
-        )),
-      ),
+          body: Center(
+              child: MaterialButton(
+        color: Colors.yellow,
+        onPressed: () async {
+          Get.find<LoginController>().kakaoLogin(context);
+        },
+        child: const Text('Kakao Login'),
+      ))),
     );
   }
 }

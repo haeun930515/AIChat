@@ -28,26 +28,21 @@ class _HomeScreenState extends State<HomeScreen> {
     sendController = TextEditingController();
     p = Provider.of<FirebaseService>(context, listen: false);
     streamSubscription = p.getSnapshot().listen((event) {
-      //   Future.microtask(() {
-      //     p.load();
-      //   });
       p.getPreviousChats(p.roomNum).then((chats) {
         if (chats.isNotEmpty) {
           setState(() {});
         }
       });
-      // p.addOne(
-      //     ChatModel.fromJson(event.docs[0].data() as Map<String, dynamic>));
     });
     super.initState();
   }
 
-  @override
-  void dispose() {
-    sendController.dispose();
-    streamSubscription.cancel();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   sendController.dispose();
+  //   streamSubscription.cancel();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
