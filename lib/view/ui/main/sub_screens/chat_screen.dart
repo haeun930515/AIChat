@@ -39,74 +39,64 @@ class ChatsScreenState extends State<ChatsScreen> {
           } else if (snapshot.hasError) {
             return const Center(child: Text('로딩 실패'));
           } else {
-            return ListView.builder(
-              key: UniqueKey(),
-              itemCount: maxRoomNum,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 13),
-                      child: Text(
-                        '채팅방 $index',
-                        style: const TextStyle(fontSize: 17),
+            Map<String, dynamic>? data =
+                snapshot.data?.data() as Map<String, dynamic>?;
+            List<Widget> roomList = [];
+            for (int i = 0; i < maxRoomNum; i++) {
+              roomList.add(Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 13),
+                    child: Text(
+                      '채팅방 $i',
+                      style: const TextStyle(fontSize: 17),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                    padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                    decoration: BoxDecoration(
+                        color: p.roomNum == i
+                            ? Colors.grey[700]
+                            : Colors.blue[700],
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
+                            bottomLeft: Radius.circular(30),
+                            bottomRight: Radius.circular(0))),
+                    child: ListTile(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: ((context) => ChangeNotifierProvider(
+                                    create: (context) => FirebaseService(
+                                      id: p.id,
+                                      name: p.name,
+                                      roomNum: i,
+                                    ),
+                                    child: const MainScreen(),
+                                  ))),
+                        );
+                      },
+                      trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => {
+                                p.DelChatRoom(i),
+                                setState(() {}),
+                              }),
+                      title: Text(
+                        data?['ChatRoom$i'] != null
+                            ? data!['ChatRoom$i']['usertext']
+                            : '대화가 없습니다.',
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                      decoration: BoxDecoration(
-                          color: p.roomNum == index
-                              ? Colors.grey[700]
-                              : Colors.blue[700],
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(30),
-                              topRight: Radius.circular(30),
-                              bottomLeft: Radius.circular(30),
-                              bottomRight: Radius.circular(0))),
-                      child: ListTile(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: ((context) => ChangeNotifierProvider(
-                                      create: (context) => FirebaseService(
-                                        id: p.id,
-                                        name: p.name,
-                                        roomNum: index,
-                                      ),
-                                      child: const MainScreen(),
-                                    ))),
-                          );
-                        },
-                        trailing: IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () => {
-                                  p.DelChatRoom(index),
-                                  setState(() {}),
-                                }),
-                        title: FutureBuilder<String>(
-                          future: p.RoomTitle(index),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return const Text('에러 발생');
-                            } else {
-                              return Text(
-                                snapshot.data!,
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              },
-            );
+                  ),
+                ],
+              ));
+            }
+            return ListView(children: roomList);
           }
         },
       ),
