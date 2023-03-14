@@ -1,11 +1,12 @@
 import 'dart:developer';
+import 'package:chatai/controller/main_nav_controller.dart';
 import 'package:chatai/firebase_options.dart';
 import 'package:chatai/routes/app_pages.dart';
 import 'package:chatai/routes/app_routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 void main() async {
@@ -31,12 +32,16 @@ void main() async {
   hasykey();
 
   FlutterNativeSplash.remove(); // 초기화가 끝나는 시점에 삽입
-  runApp(GetMaterialApp(
-    title: 'ai chat',
-    theme: ThemeData(primaryColor: Colors.white),
-    getPages: AppPages.pages,
-    initialRoute: Routes.LOGIN,
-  ));
+  runApp(
+    GetMaterialApp(
+        title: 'ai chat',
+        theme: ThemeData(primaryColor: Colors.white),
+        getPages: AppPages.pages,
+        initialRoute: Routes.LOGIN,
+        initialBinding: BindingsBuilder(() {
+          Get.put(MainNavController());
+        })),
+  );
 }
 
 void hasykey() async {
