@@ -39,8 +39,6 @@ class ChatsScreenState extends State<ChatsScreen> {
           } else if (snapshot.hasError) {
             return const Center(child: Text('로딩 실패'));
           } else {
-            Map<String, dynamic>? data =
-                snapshot.data?.data() as Map<String, dynamic>?;
             List<Widget> roomList = [];
             for (int i = 0; i < maxRoomNum; i++) {
               CollectionReference subcollectionRef =
