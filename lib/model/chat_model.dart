@@ -59,6 +59,12 @@ class ChatAISendModel {
   ChatAISendModel(this.prompt);
 
   Map<String, dynamic> toJson() {
-    return {'prompt': prompt, 'model': model, 'max_tokens': 150};
+    return {
+      'messages': [
+        {"role": "user", "content": prompt}
+      ],
+      'model': model,
+      'max_tokens': 150
+    };
   }
 }
