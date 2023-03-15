@@ -37,13 +37,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  // @override
-  // void dispose() {
-  //   sendController.dispose();
-  //   streamSubscription.cancel();
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     Get.put(ChatController(
@@ -52,12 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('채팅'),
-        actions: [
-          IconButton(
-            onPressed: p.CreateRoom,
-            icon: const Icon(Icons.navigate_next),
-          ),
-        ],
       ),
       body: Column(
         children: [
