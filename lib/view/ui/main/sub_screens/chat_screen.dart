@@ -1,7 +1,8 @@
+import 'package:chatai/controller/main_nav_controller.dart';
 import 'package:chatai/provider/firebase_api.dart';
-import 'package:chatai/view/ui/main/main_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class ChatsScreen extends StatefulWidget {
@@ -85,19 +86,22 @@ class ChatsScreenState extends State<ChatsScreen> {
 
                             return ListTile(
                               onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: ((context) =>
-                                          ChangeNotifierProvider(
-                                            create: (context) =>
-                                                FirebaseService(
-                                              id: p.id,
-                                              name: p.name,
-                                              roomNum: i,
-                                            ),
-                                            child: const MainScreen(),
-                                          ))),
-                                );
+                                Get.find<MainNavController>()
+                                    .changeRootPageIndex(0);
+
+                                // Navigator.of(context).push(
+                                //   MaterialPageRoute(
+                                //       builder: ((context) =>
+                                //           ChangeNotifierProvider(
+                                //             create: (context) =>
+                                //                 FirebaseService(
+                                //               id: p.id,
+                                //               name: p.name,
+                                //               roomNum: i,
+                                //             ),
+                                //             child: const MainScreen(),
+                                //           ))),
+                                // );
                               },
                               trailing: IconButton(
                                   icon: const Icon(Icons.delete),
