@@ -4,8 +4,8 @@ import 'package:chatai/view/ui/main/main_screen.dart';
 import 'package:chatai/provider/firebase_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:provider/provider.dart';
 
 class LoginApi {
 // 로그인 연동
@@ -73,18 +73,14 @@ class LoginApi {
 
     log('카카오톡으로 로그인 성공');
     loginTokenInfo();
-    // Get.toN
-    Navigator.of(context).push(
-      MaterialPageRoute(
-          builder: ((context) => ChangeNotifierProvider(
-                create: (context) => FirebaseService(
-                  id: id,
-                  name: name,
-                  roomNum: 0,
-                ),
-                child: const MainScreen(),
-              ))),
-    );
+    Get.off(() => GetBuilder<FirebaseService>(
+          init: FirebaseService(
+            id: id,
+            name: name,
+            roomNum: 0,
+          ),
+          builder: (controller) => const MainScreen(),
+        ));
   }
 
   loginTokenInfo() async {

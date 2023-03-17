@@ -1,9 +1,10 @@
 import 'package:chatai/controller/main_nav_controller.dart';
-import 'package:chatai/view/ui/main/sub_screens/chat_screen.dart';
-import 'package:chatai/view/ui/main/sub_screens/home_screen.dart';
-import 'package:chatai/view/ui/main/sub_screens/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'sub_screens/chat_screen.dart';
+import 'sub_screens/home_screen.dart';
+import 'sub_screens/settings_screen.dart';
 
 class MainScreen extends GetView<MainNavController> {
   const MainScreen({
@@ -12,6 +13,7 @@ class MainScreen extends GetView<MainNavController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(MainNavController());
     return Obx(() => Scaffold(
           body: IndexedStack(
             index: controller.rootPageIndex.value,
