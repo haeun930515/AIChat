@@ -1,61 +1,44 @@
+import 'package:chatai/controller/main_nav_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'sub_screens/chat_screen.dart';
 import 'sub_screens/home_screen.dart';
 import 'sub_screens/settings_screen.dart';
 
-class MainScreen extends StatefulWidget {
+class MainScreen extends GetView<MainNavController> {
   const MainScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
-  int _currentIndex = 0;
-
-  final List<Widget> _screens = const [
-    HomeScreen(),
-    ChatsScreen(),
-    SettingsScreen(),
-  ];
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: TabBarView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: TabController(
-          length: _screens.length,
-          vsync: this,
-          initialIndex: _currentIndex,
-        ),
-        children: _screens,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+    Get.put(MainNavController());
+    return Obx(() => Scaffold(
+          body: IndexedStack(
+            index: controller.rootPageIndex.value,
+            children: const [HomeScreen(), ChatsScreen(), SettingsScreen()],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chats',
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: controller.rootPageIndex.toInt(),
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
+            onTap: controller.rootPageIndex,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.chat),
+                label: 'Chats',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: 'Settings',
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }

@@ -1,19 +1,20 @@
 import 'package:chatai/model/chat_model.dart';
 import 'package:chatai/provider/firebase_api.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 
 class ChattingItem extends StatelessWidget {
-  const ChattingItem({
+  ChattingItem({
     Key? key,
-    required this.chattingModel,
-  }) : super(key: key);
-  final ChatModel chattingModel;
+    required ChatModel chattingModel,
+  })  : chattingModel = chattingModel.obs,
+        super(key: key);
+  final Rx<ChatModel> chattingModel;
 
   @override
   Widget build(BuildContext context) {
-    var p = Provider.of<FirebaseService>(context);
-    var isMe = chattingModel.id == p.id;
+    var p = Get.find<FirebaseService>();
+    var isMe = chattingModel.value.id == p.id;
 
     return Column(
       children: [
@@ -37,7 +38,7 @@ class ChattingItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 13),
                 child: Text(
-                  isMe ? chattingModel.name : 'ai',
+                  isMe ? chattingModel.value.name : 'ai',
                   style: const TextStyle(fontSize: 17),
                 ),
               ),
@@ -62,7 +63,9 @@ class ChattingItem extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                         child: Text(
-                          isMe ? chattingModel.usertext : chattingModel.aitext,
+                          isMe
+                              ? chattingModel.value.usertext
+                              : chattingModel.value.aitext,
                           style: const TextStyle(
                               color: Colors.white, fontSize: 18),
                         ),
