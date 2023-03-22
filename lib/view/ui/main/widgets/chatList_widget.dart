@@ -38,7 +38,7 @@ class ChattingItem extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 13),
                 child: Text(
-                  isMe ? chattingModel.value.name : 'ai',
+                  isMe ? chattingModel.value.name : 'AI',
                   style: const TextStyle(fontSize: 17),
                 ),
               ),

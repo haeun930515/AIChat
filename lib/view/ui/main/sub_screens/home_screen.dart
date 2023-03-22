@@ -16,6 +16,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('채팅'),
+        backgroundColor: const Color.fromRGBO(134, 93, 255, 1),
       ),
       body: Column(
         children: [

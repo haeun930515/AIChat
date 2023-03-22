@@ -26,17 +26,26 @@ class MainScreen extends GetView<MainNavController> {
             onTap: controller.rootPageIndex,
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: 'Home',
-              ),
+                  icon: Icon(Icons.forum),
+                  label: '',
+                  activeIcon: Icon(
+                    Icons.forum,
+                    color: Color.fromRGBO(134, 93, 255, 1),
+                  )),
               BottomNavigationBarItem(
-                icon: Icon(Icons.chat),
-                label: 'Chats',
-              ),
+                  icon: Icon(Icons.chat),
+                  label: '',
+                  activeIcon: Icon(
+                    Icons.chat,
+                    color: Color.fromRGBO(134, 93, 255, 1),
+                  )),
               BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                label: 'Settings',
-              ),
+                  icon: Icon(Icons.settings),
+                  label: '',
+                  activeIcon: Icon(
+                    Icons.settings,
+                    color: Color.fromRGBO(134, 93, 255, 1),
+                  )),
             ],
           ),
         ));

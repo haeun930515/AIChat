@@ -13,7 +13,8 @@ class SettingsScreen extends StatelessWidget {
     final p = Get.find<FirebaseService>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('세팅'),
+        title: const Text('설정'),
+        backgroundColor: const Color.fromRGBO(134, 93, 255, 1),
       ),
       body: ListView(
         children: [

@@ -17,6 +17,7 @@ class ChatsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('채팅방'),
+        backgroundColor: const Color.fromRGBO(134, 93, 255, 1),
       ),
       body: ListView.builder(
         itemCount: maxRoomNum,
