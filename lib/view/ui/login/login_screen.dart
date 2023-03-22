@@ -18,7 +18,7 @@ class LoginScreen extends StatelessWidget {
           builder: (_) {
             return MaterialButton(
               color: Colors.yellow,
-              onPressed: () async {
+              onPressed: () {
                 Get.find<LoginController>().kakaoLogin(context);
               },
               child: const Text('Kakao Login'),

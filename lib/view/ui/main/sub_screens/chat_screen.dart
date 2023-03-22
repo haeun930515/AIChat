@@ -26,7 +26,7 @@ class ChatsScreen extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 13),
                 child: Text(
-                  '채팅방 $i',
+                  '채팅방 ${i + 1}',
                   style: const TextStyle(fontSize: 17),
                 ),
               ),
