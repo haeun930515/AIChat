@@ -20,7 +20,6 @@ class FirebaseService extends GetxController {
   }) : roomNum = roomNum.obs;
 
   Future<void> getPreviousChats(int roomNum) async {
-    chattingList = <ChatModel>[].obs;
     final res = await firebase
         .collection('ChatRoom$roomNum')
         .orderBy('uploadTime', descending: true)
@@ -125,5 +124,9 @@ class FirebaseService extends GetxController {
 
   Stream<DocumentSnapshot<Object?>> listenToChatRooms() {
     return FirebaseFirestore.instance.collection('users').doc(id).snapshots();
+  }
+
+  void ChatClear() {
+    chattingList.clear();
   }
 }

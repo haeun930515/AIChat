@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:chatai/view/ui/login/login_screen.dart';
 import 'package:chatai/view/ui/main/main_screen.dart';
 import 'package:chatai/provider/firebase_api.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -109,11 +108,8 @@ class LoginApi {
     try {
       await UserApi.instance.logout();
       log('로그아웃 성공, SDK에서 토큰 삭제');
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: ((context) => const LoginScreen()),
-        ),
+      Get.offAll(
+        () => GetBuilder(builder: (controller) => const LoginScreen()),
       );
     } catch (error) {
       log('로그아웃 실패, SDK에서 토큰 삭제 $error');
