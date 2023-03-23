@@ -63,9 +63,6 @@ class LoginApi {
   }
 
   loginOn(context) async {
-    // 채팅방 시작 번호
-    int roomNum = 0;
-
     User user = await UserApi.instance.me();
     String id = user.id.toString();
     String name = user.kakaoAccount?.profile?.nickname ?? '';

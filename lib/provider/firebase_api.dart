@@ -7,6 +7,7 @@ class FirebaseService extends GetxController {
   String id;
   String name;
   RxInt roomNum;
+  RxInt maxRoomNum = RxInt(0);
   RxList<ChatModel> chattingList = <ChatModel>[].obs;
   RxList<String> roomTitles = List.generate(10, (index) => "대화가 없습니다.").obs;
   late Stream<List<String>> chatRoomsStream;
@@ -94,14 +95,29 @@ class FirebaseService extends GetxController {
     update();
   }
 
-  Future<int> roomCount() async {
-    late int count;
-
-    // 서브컬렉션을 구하는 로직 필요!
-    count = await listenToChatRooms().length;
-
-    print('방 개수: $count');
-    return count;
+  RoomCreat(context) {
+    maxRoomNum++;
+    if (maxRoomNum > 10) {
+      maxRoomNum = 10.obs;
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('최대 방 갯수 초과'),
+            content: const Text('채팅방은 10개를 초과 할 수 없습니다.'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('닫기'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+    update();
   }
 
   Future<String> RoomTitle(int index) async {
@@ -120,6 +136,23 @@ class FirebaseService extends GetxController {
       final title = await RoomTitle(i);
       roomTitles[i] = title;
     }
+  }
+
+  loadRoomCount() async {
+    int curMaxRoomNum = 0;
+    for (int i = 0; i < roomTitles.length; i++) {
+      QuerySnapshot r = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(id)
+          .collection('ChatRoom$i')
+          .orderBy('uploadTime', descending: true)
+          .limit(1)
+          .get();
+      if (r.docs.isNotEmpty) {
+        curMaxRoomNum++;
+      }
+    }
+    maxRoomNum.value = curMaxRoomNum;
   }
 
   Stream<DocumentSnapshot<Object?>> listenToChatRooms() {
