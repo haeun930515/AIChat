@@ -72,6 +72,7 @@ class HomeScreen extends StatelessWidget {
                     //var md = await Get.find<ChatController>().getAnswer(text);
                     p.SendMessage(text, 'md');
                     p.sendController.text = '';
+                    FocusScope.of(context).requestFocus(FocusNode());
                   },
                   child: const Padding(
                     padding: EdgeInsets.fromLTRB(15, 5, 15, 5),
