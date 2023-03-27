@@ -1,4 +1,7 @@
+import 'package:chatai/controller/chat_controller.dart';
+import 'package:chatai/provider/chat_api.dart';
 import 'package:chatai/provider/firebase_api.dart';
+import 'package:chatai/repository/chat_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../widgets/chatList_widget.dart';
@@ -10,6 +13,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(ChatController(
+        repository: ChatRepository(apiClient: ChatAPIService())));
     final p = Get.find<FirebaseService>();
     p.getPreviousChats(p.roomNum.value);
 
@@ -70,8 +75,8 @@ class HomeScreen extends StatelessWidget {
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
                     var text = p.sendController.text;
-                    //var md = await Get.find<ChatController>().getAnswer(text);
-                    p.SendMessage(text, 'md');
+                    var md = await Get.find<ChatController>().getAnswer(text);
+                    p.SendMessage(text, md);
                     p.sendController.text = '';
                     FocusScope.of(context).requestFocus(FocusNode());
                   },

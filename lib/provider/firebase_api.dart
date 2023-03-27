@@ -40,7 +40,6 @@ class FirebaseService extends GetxController {
           .collection("ChatRoom$roomNum")
           .add(chat.toJson())
           .then((value) => {
-                print("Text Added"),
                 chattingList.add(chat),
               })
           .catchError((error) => print("Failed to add text : $error"));
