@@ -14,6 +14,6 @@ class AppPages {
     GetPage(
         name: Routes.MAIN,
         page: () => const MainScreen(),
-        binding: ChatBinding()),
+        bindings: [LoginBinding(), ChatBinding()]),
   ];
 }

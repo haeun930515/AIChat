@@ -105,9 +105,7 @@ class LoginApi {
     try {
       await UserApi.instance.logout();
       log('로그아웃 성공, SDK에서 토큰 삭제');
-      Get.offAll(
-        () => GetBuilder(builder: (controller) => const LoginScreen()),
-      );
+      Get.offAll(() => const LoginScreen());
     } catch (error) {
       log('로그아웃 실패, SDK에서 토큰 삭제 $error');
     }
