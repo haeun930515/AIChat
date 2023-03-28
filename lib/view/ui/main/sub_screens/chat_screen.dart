@@ -60,8 +60,34 @@ class ChatsScreen extends StatelessWidget {
                       },
                       trailing: IconButton(
                         icon: const Icon(Icons.delete),
-                        onPressed: () => {
-                          p.DelChatRoom(i),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text('채팅방 내용 지우기'),
+                                content: const Text('정말로 지우시겠습니까?'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    child: const Text('취소'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  TextButton(
+                                    child: const Text(
+                                      '삭제',
+                                      style: TextStyle(color: Colors.red),
+                                    ),
+                                    onPressed: () {
+                                      p.DelChatRoom(i);
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         },
                       ),
                       title: Text(
