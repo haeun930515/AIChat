@@ -10,13 +10,13 @@ class ChatAPIService {
 
   getChat(String chat) async {
     final chatbody = jsonEncode(ChatAISendModel(chat).toJson());
-    final url = Uri.parse('https://api.openai.com/v1/completions');
+    final url = Uri.parse('https://api.openai.com/v1/chat/completions');
     final response = await http.post(url, body: chatbody, headers: headers);
     if (response.statusCode == 200) {
-      final ChatAIResponseModel md = ChatAIResponseModel.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
-      Choices cs = Choices.fromJson(md.choices[0]);
-      return cs.text.trim();
+      Map ss = jsonDecode(response.body);
+      String answer = {ss['choices'][0]['message']['content']}.toString();
+      answer = answer.substring(1, answer.length - 1);
+      return answer;
     } else {
       throw Error();
     }
