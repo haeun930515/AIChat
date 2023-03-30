@@ -19,16 +19,33 @@ class LoginScreen extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: Center(child: GetBuilder<LoginController>(
-          builder: (_) {
-            return MaterialButton(
-              color: Colors.yellow,
-              onPressed: () {
-                Get.find<LoginController>().kakaoLogin(context);
+        body: Center(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GetBuilder<LoginController>(
+              builder: (_) {
+                return MaterialButton(
+                  color: Colors.yellow,
+                  onPressed: () {
+                    Get.find<LoginController>().kakaoLogin();
+                  },
+                  child: const Text('Kakao Login'),
+                );
               },
-              child: const Text('Kakao Login'),
-            );
-          },
+            ),
+            GetBuilder<LoginController>(
+              builder: (_) {
+                return MaterialButton(
+                  color: Colors.white,
+                  onPressed: () {
+                    Get.find<LoginController>().googlelogin();
+                  },
+                  child: const Text('Google Login'),
+                );
+              },
+            ),
+          ],
         )),
       ),
     );

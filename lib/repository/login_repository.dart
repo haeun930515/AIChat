@@ -5,11 +5,15 @@ class LoginRepository {
 
   LoginRepository({required this.apiClient});
 
-  kakaoLogin(context) {
-    return apiClient.kakaoLogin(context);
+  kakaoLogin() {
+    return apiClient.kakaoLogin();
   }
 
-  kakaoLogout(context) {
-    return apiClient.kakaoLogOut(context);
+  logout() {
+    return apiClient.logOut();
+  }
+
+  googlelogin() {
+    return apiClient.googleLogin();
   }
 }
