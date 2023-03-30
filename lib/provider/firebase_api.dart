@@ -20,78 +20,47 @@ class FirebaseService extends GetxController {
     required int roomNum,
   }) : roomNum = roomNum.obs;
 
-  Future<void> getPreviousChats(int roomNum) async {
-    final res = await firebase
-        .collection('ChatRoom$roomNum')
-        .orderBy('uploadTime', descending: true)
-        .get();
-    final chats = res.docs.map((e) => ChatModel.fromJson(e.data())).toList();
+  getPreviousChats(int roomNum) {
     chattingList.clear();
-    chattingList.addAll(chats.reversed);
-    update();
+    firebase
+        .collection('ChatRoom$roomNum')
+        .orderBy("uploadTime", descending: true)
+        .get()
+        .then((value) {
+      for (var element in value.docs) {
+        ChatModel cs = ChatModel.fromJson(element.data());
+        chattingList.add(cs);
+      }
+    });
   }
 
   // 메시지 전송
-  Future<void> SendMessage(String usertext, String aitext) async {
+  Future<void> SendMessage(String usertext, String aitext, int roomNum) async {
     if (usertext.isNotEmpty) {
       var now = DateTime.now().millisecondsSinceEpoch;
       ChatModel chat = ChatModel(id, name, usertext, aitext, now);
-      await firebase
-          .collection("ChatRoom$roomNum")
-          .add(chat.toJson())
-          .then((value) => {
-                chattingList.add(chat),
-              })
-          .catchError((error) => print("Failed to add text : $error"));
+      await firebase.collection("ChatRoom$roomNum").add(chat.toJson());
     }
-    update();
+    getPreviousChats(roomNum);
   }
 
   // 채팅방 삭제
   void DelChatRoom(int roomNum) async {
     try {
-      chattingList = <ChatModel>[].obs;
       QuerySnapshot snapshot =
           await firebase.collection("ChatRoom$roomNum").get();
-      List<QueryDocumentSnapshot> docs = snapshot.docs;
-      for (QueryDocumentSnapshot doc in docs) {
-        await doc.reference
-            .collection("ChatRoom$roomNum")
-            .get()
-            .then((subsnapshot) {
+      List<QueryDocumentSnapshot> subCollections = snapshot.docs;
+
+      for (QueryDocumentSnapshot doc in subCollections) {
+        await firebase.collection("ChatRoom$roomNum").get().then((subsnapshot) {
           for (DocumentSnapshot subdoc in subsnapshot.docs) {
             subdoc.reference.delete();
           }
         });
-        await doc.reference.delete();
       }
     } catch (e) {
       print('Error deleting chat room: $e');
     }
-  }
-
-  Stream<QuerySnapshot> getSnapshot() {
-    return firebase
-        .collection("ChatRoom$roomNum")
-        .orderBy('uploadTime', descending: true)
-        .limit(1)
-        .snapshots();
-  }
-
-  void addOne(ChatModel model) {
-    chattingList.insert(0, model);
-    update();
-  }
-
-  Future load() async {
-    chattingList = <ChatModel>[].obs;
-    var result = await firebase
-        .collection("ChatRoom$roomNum")
-        .orderBy('uploadTime', descending: true)
-        .get();
-    var l = result.docs.map((e) => ChatModel.fromJson(e.data())).toList();
-    chattingList.addAll(l);
-    update();
   }
 
   RoomCreat(context) {

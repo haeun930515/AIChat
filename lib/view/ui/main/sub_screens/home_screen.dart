@@ -6,7 +6,7 @@ import 'package:chatai/view/ui/main/widgets/chatList_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends GetView<FirebaseService> {
   const HomeScreen({
     Key? key,
   }) : super(key: key);
@@ -28,22 +28,16 @@ class HomeScreen extends StatelessWidget {
         body: Column(
           children: [
             Expanded(
-              child: Obx(
-                () => ListView.builder(
-                  reverse: true,
-                  itemCount: p.chattingList.length,
-                  itemBuilder: (context, index) {
-                    final reversedIndex = p.chattingList.length - index - 1;
-                    if (reversedIndex < 0) {
-                      return null;
-                    }
-                    final chattingModel = p.chattingList[reversedIndex];
-                    return ChattingItem(
-                      chattingModel: chattingModel,
-                    );
-                  },
-                ),
-              ),
+              child: Obx(() {
+                return ListView.builder(
+                    reverse: true,
+                    itemCount: controller.chattingList.length,
+                    itemBuilder: (context, index) {
+                      return ChattingItem(
+                        chattingModel: controller.chattingList[index],
+                      );
+                    });
+              }),
             ),
             // 구분선
             Divider(
@@ -78,7 +72,7 @@ class HomeScreen extends StatelessWidget {
                     onTap: () async {
                       var text = p.sendController.text;
                       var md = await Get.find<ChatController>().getAnswer(text);
-                      p.SendMessage(text, md);
+                      p.SendMessage(text, md, controller.roomNum.value);
                       p.sendController.text = '';
                       FocusScope.of(context).requestFocus(FocusNode());
                     },

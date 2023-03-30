@@ -3,7 +3,7 @@ import 'package:chatai/provider/firebase_api.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatsScreen extends StatelessWidget {
+class ChatsScreen extends GetView<FirebaseService> {
   const ChatsScreen({
     Key? key,
   }) : super(key: key);
@@ -54,8 +54,8 @@ class ChatsScreen extends StatelessWidget {
                             bottomRight: Radius.circular(0))),
                     child: ListTile(
                       onTap: () {
-                        p.roomNum.value = i;
-                        p.getPreviousChats(i);
+                        controller.roomNum.value = i;
+                        controller.getPreviousChats(i);
                         Get.find<MainNavController>().changeRootPageIndex(0);
                       },
                       trailing: IconButton(
