@@ -45,6 +45,7 @@ class FirebaseService extends GetxController {
           .catchError((error) => print("Failed to add text : $error"));
     }
     update();
+    loadRoomTitles();
   }
 
   // 채팅방 삭제

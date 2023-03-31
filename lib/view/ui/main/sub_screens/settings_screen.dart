@@ -55,7 +55,7 @@ class SettingsScreen extends StatelessWidget {
           GetBuilder<LoginController>(
             builder: (_) {
               return ListTile(
-                title: const Text('Kakao LogOut'),
+                title: const Text('LogOut'),
                 onTap: () {
                   Get.find<LoginController>().logout();
                 },
