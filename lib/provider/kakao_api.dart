@@ -2,18 +2,20 @@ import 'dart:developer';
 import 'package:chatai/view/ui/login/login_screen.dart';
 import 'package:chatai/view/ui/main/main_screen.dart';
 import 'package:chatai/provider/firebase_api.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 class LoginApi {
-// 로그인 연동
-  kakaoLogin(context) async {
+  // 로그인 연동
+  kakaoLogin() async {
     if (await AuthApi.instance.hasToken()) {
       try {
         AccessTokenInfo tokenInfo = await UserApi.instance.accessTokenInfo();
         log('토큰 유효성 체크 성공 ${tokenInfo.id} ${tokenInfo.expiresIn}');
-        loginOn(context);
+        loginOn();
       } catch (error) {
         if (error is KakaoException && error.isInvalidTokenError()) {
           log('토큰 만료 $error');
@@ -24,7 +26,7 @@ class LoginApi {
           // 카카오 계정으로 로그인
           OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
           log('로그인 성공 ${token.accessToken}');
-          loginOn(context);
+          loginOn();
         } catch (error) {
           log('로그인 실패 $error');
         }
@@ -35,7 +37,7 @@ class LoginApi {
       if (await isKakaoTalkInstalled()) {
         try {
           await UserApi.instance.loginWithKakaoAccount();
-          loginOn(context);
+          loginOn();
         } catch (error) {
           log('카카오톡으로 로그인 실패 $error');
           // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
@@ -46,7 +48,7 @@ class LoginApi {
           // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
           try {
             await UserApi.instance.loginWithKakaoAccount();
-            loginOn(context);
+            loginOn();
           } catch (error) {
             log('카카오계정으로 로그인 실패 $error');
           }
@@ -54,7 +56,7 @@ class LoginApi {
       } else {
         try {
           await UserApi.instance.loginWithKakaoAccount();
-          loginOn(context);
+          loginOn();
         } catch (error) {
           log('카카오계정으로 로그인 실패 $error');
         }
@@ -62,13 +64,13 @@ class LoginApi {
     }
   }
 
-  loginOn(context) async {
+  loginOn() async {
     User user = await UserApi.instance.me();
     String id = user.id.toString();
     String name = user.kakaoAccount?.profile?.nickname ?? '';
 
-    log('카카오톡으로 로그인 성공');
-    loginTokenInfo();
+    log('로그인 성공');
+    //loginTokenInfo();
     Get.off(() => GetBuilder<FirebaseService>(
           init: FirebaseService(
             id: id,
@@ -101,13 +103,75 @@ class LoginApi {
     }
   }
 
-  kakaoLogOut(context) async {
-    try {
-      await UserApi.instance.logout();
-      log('로그아웃 성공, SDK에서 토큰 삭제');
+  logOut() async {
+    final provider = await _googleSignIn.isSignedIn();
+    if (provider) {
+      await _googleSignIn.signOut();
+      log('로그아웃 성공, Google SDK에서 토큰 삭제');
       Get.offAll(() => const LoginScreen());
-    } catch (error) {
-      log('로그아웃 실패, SDK에서 토큰 삭제 $error');
+    } else {
+      try {
+        await UserApi.instance.logout();
+        log('로그아웃 성공, Kakao SDK에서 토큰 삭제');
+        Get.offAll(() => const LoginScreen());
+      } catch (error) {
+        log('로그아웃 실패, Kakao SDK에서 토큰 삭제 $error');
+      }
     }
+  }
+
+  // 구글 로그인
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
+
+  googleLoginOn() async {
+    // Trigger the Google Authentication flow.
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+
+    if (googleUser != null) {
+      // Obtain the auth details from the request.
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
+
+      // Create a new credential.
+      final credential = auth.GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Sign in to Firebase with the Google credentials.
+      return await _auth.signInWithCredential(credential);
+    } else {
+      throw Exception('Google sign in failed');
+    }
+  }
+
+  googleLogin() async {
+    try {
+      final userCredential = await googleLoginOn();
+      if (userCredential != null) {
+        googleloginOn(userCredential.user);
+      } else {
+        log('로그인 실패');
+      }
+    } catch (error) {
+      log('로그인 실패 $error');
+    }
+  }
+
+  googleloginOn(auth.User user) async {
+    String id = user.uid;
+    String name = user.displayName ?? '';
+
+    log('구글 로그인 성공');
+    loginTokenInfo();
+    Get.off(() => GetBuilder<FirebaseService>(
+          init: FirebaseService(
+            id: id,
+            name: name,
+            roomNum: 0,
+          ),
+          builder: (controller) => const MainScreen(),
+        ));
   }
 }

@@ -3,13 +3,19 @@ import 'package:get/get.dart';
 
 class LoginController extends GetxController {
   final LoginRepository repository;
-  LoginController({required this.repository});
+  LoginController({
+    required this.repository,
+  });
 
-  kakaoLogin(context) {
-    repository.kakaoLogin(context);
+  kakaoLogin() {
+    repository.kakaoLogin();
   }
 
-  kakaoLogout(context) {
-    repository.kakaoLogout(context);
+  logout() {
+    repository.logout();
+  }
+
+  googlelogin() {
+    repository.googlelogin();
   }
 }

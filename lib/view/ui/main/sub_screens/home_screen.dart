@@ -71,8 +71,8 @@ class HomeScreen extends GetView<FirebaseService> {
                     behavior: HitTestBehavior.opaque,
                     onTap: () async {
                       var text = p.sendController.text;
-                      var md = await Get.find<ChatController>().getAnswer(text);
-                      p.SendMessage(text, md, controller.roomNum.value);
+                      //var md = await Get.find<ChatController>().getAnswer(text);
+                      p.SendMessage(text, 'md');
                       p.sendController.text = '';
                       FocusScope.of(context).requestFocus(FocusNode());
                     },

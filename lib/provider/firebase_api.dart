@@ -41,7 +41,8 @@ class FirebaseService extends GetxController {
       ChatModel chat = ChatModel(id, name, usertext, aitext, now);
       await firebase.collection("ChatRoom$roomNum").add(chat.toJson());
     }
-    getPreviousChats(roomNum);
+    update();
+    loadRoomTitles();
   }
 
   // 채팅방 삭제

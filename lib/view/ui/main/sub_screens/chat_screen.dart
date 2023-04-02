@@ -28,7 +28,7 @@ class ChatsScreen extends GetView<FirebaseService> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Obx(
         () => ListView.builder(
-          itemCount: p.maxRoomNum.value,
+          itemCount: p.maxRoomNum.value == 0 ? 1 : p.maxRoomNum.value,
           itemBuilder: (context, i) {
             return Column(
               children: [
@@ -39,58 +39,58 @@ class ChatsScreen extends GetView<FirebaseService> {
                     style: const TextStyle(fontSize: 17),
                   ),
                 ),
-                Obx(
-                  () => Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 5),
-                    padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                    decoration: BoxDecoration(
-                        color: p.roomNum == i.obs
-                            ? Colors.grey[700]
-                            : Colors.blue[700],
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30),
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(0))),
-                    child: ListTile(
-                      onTap: () {
-                        controller.roomNum.value = i;
-                        controller.getPreviousChats(i);
-                        Get.find<MainNavController>().changeRootPageIndex(0);
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
+                  padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                  decoration: BoxDecoration(
+                      color: p.roomNum == i.obs
+                          ? Colors.grey[700]
+                          : Colors.blue[700],
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30),
+                          bottomLeft: Radius.circular(30),
+                          bottomRight: Radius.circular(0))),
+                  child: ListTile(
+                    onTap: () {
+                      p.roomNum.value = i;
+                      p.getPreviousChats(i);
+                      Get.find<MainNavController>().changeRootPageIndex(0);
+                    },
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete),
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('채팅방 내용 지우기'),
+                              content: const Text('정말로 지우시겠습니까?'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('취소'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: const Text(
+                                    '삭제',
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                  onPressed: () {
+                                    p.DelChatRoom(i);
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
                       },
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text('채팅방 내용 지우기'),
-                                content: const Text('정말로 지우시겠습니까?'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text('취소'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: const Text(
-                                      '삭제',
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                    onPressed: () {
-                                      p.DelChatRoom(i);
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                      title: Text(
+                    ),
+                    title: Obx(
+                      () => Text(
                         p.roomTitles[i],
                         style: const TextStyle(
                           color: Colors.white,
