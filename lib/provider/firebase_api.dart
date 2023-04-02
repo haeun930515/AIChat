@@ -35,7 +35,7 @@ class FirebaseService extends GetxController {
   }
 
   // 메시지 전송
-  Future<void> SendMessage(String usertext, String aitext, int roomNum) async {
+  Future<void> SendMessage(String usertext, String aitext) async {
     if (usertext.isNotEmpty) {
       var now = DateTime.now().millisecondsSinceEpoch;
       ChatModel chat = ChatModel(id, name, usertext, aitext, now);
