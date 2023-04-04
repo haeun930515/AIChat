@@ -58,6 +58,8 @@ class FirebaseService extends GetxController {
             subdoc.reference.delete();
           }
         });
+        await doc.reference.delete();
+        update();
       }
     } catch (e) {
       print('Error deleting chat room: $e');
@@ -109,7 +111,7 @@ class FirebaseService extends GetxController {
 
   loadRoomCount() async {
     int curMaxRoomNum = 0;
-    for (int i = 0; i < roomTitles.length; i++) {
+    for (int i = 0; i < 10; i++) {
       QuerySnapshot r = await FirebaseFirestore.instance
           .collection('users')
           .doc(id)
@@ -118,7 +120,7 @@ class FirebaseService extends GetxController {
           .limit(1)
           .get();
       if (r.docs.isNotEmpty) {
-        curMaxRoomNum++;
+        curMaxRoomNum = i + 1;
       }
     }
     maxRoomNum.value = curMaxRoomNum;
