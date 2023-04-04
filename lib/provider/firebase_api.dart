@@ -60,6 +60,8 @@ class FirebaseService extends GetxController {
         });
         await doc.reference.delete();
         update();
+        getPreviousChats(roomNum);
+        loadRoomTitles();
       }
     } catch (e) {
       print('Error deleting chat room: $e');
