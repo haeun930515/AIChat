@@ -40,7 +40,8 @@ class ChatAISendModel {
       'messages': [
         {"role": "user", "content": prompt}
       ],
-      'model': model
+      'model': model,
+      'max_tokens': 1000
     };
   }
 }
