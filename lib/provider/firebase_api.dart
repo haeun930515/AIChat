@@ -45,7 +45,7 @@ class FirebaseService extends GetxController {
       ChatModel chat = ChatModel(id, name, usertext, aitext, now);
       await firebase.collection("ChatRoom$roomNum").add(chat.toJson());
     }
-    update();
+    getPreviousChats(roomNum.value);
     loadRoomTitles();
     isLoading.value = false;
   }
@@ -103,7 +103,7 @@ class FirebaseService extends GetxController {
   }
 
   Future<String> RoomTitle(int index) async {
-    isLoading.value = true;
+    //isLoading.value = true;
     QuerySnapshot r = await FirebaseFirestore.instance
         .collection('users')
         .doc(id)
@@ -111,21 +111,21 @@ class FirebaseService extends GetxController {
         .orderBy('uploadTime', descending: true)
         .limit(1)
         .get();
-    isLoading.value = false;
+    //isLoading.value = false;
     return r.docs.isNotEmpty ? r.docs.first.get('usertext') : '대화가 없습니다.';
   }
 
   Future<void> loadRoomTitles() async {
-    isLoading.value = true;
+    //isLoading.value = true;
     for (int i = 0; i < roomTitles.length; i++) {
       final title = await RoomTitle(i);
       roomTitles[i] = title;
     }
-    isLoading.value = false;
+    //isLoading.value = false;
   }
 
   loadRoomCount() async {
-    isLoading.value = true;
+    //isLoading.value = true;
     int curMaxRoomNum = 0;
     for (int i = 0; i < 10; i++) {
       QuerySnapshot r = await FirebaseFirestore.instance
@@ -140,7 +140,7 @@ class FirebaseService extends GetxController {
       }
     }
     maxRoomNum.value = curMaxRoomNum;
-    isLoading.value = false;
+    //isLoading.value = false;
   }
 
   Stream<DocumentSnapshot<Object?>> listenToChatRooms() {
