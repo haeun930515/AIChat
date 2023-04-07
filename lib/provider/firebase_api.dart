@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class FirebaseService extends GetxController {
+  var isLoading = false.obs;
   String id;
   String name;
   RxInt roomNum;
@@ -21,6 +22,7 @@ class FirebaseService extends GetxController {
   }) : roomNum = roomNum.obs;
 
   getPreviousChats(int roomNum) {
+    isLoading.value = true;
     chattingList.clear();
     firebase
         .collection('ChatRoom$roomNum')
@@ -32,10 +34,12 @@ class FirebaseService extends GetxController {
         chattingList.add(cs);
       }
     });
+    isLoading.value = false;
   }
 
   // 메시지 전송
   Future<void> SendMessage(String usertext, String aitext) async {
+    isLoading.value = true;
     if (usertext.isNotEmpty) {
       var now = DateTime.now().millisecondsSinceEpoch;
       ChatModel chat = ChatModel(id, name, usertext, aitext, now);
@@ -43,10 +47,12 @@ class FirebaseService extends GetxController {
     }
     update();
     loadRoomTitles();
+    isLoading.value = false;
   }
 
   // 채팅방 삭제
   void DelChatRoom(int roomNum) async {
+    isLoading.value = true;
     try {
       QuerySnapshot snapshot =
           await firebase.collection("ChatRoom$roomNum").get();
@@ -63,12 +69,14 @@ class FirebaseService extends GetxController {
         getPreviousChats(roomNum);
         loadRoomTitles();
       }
+      isLoading.value = false;
     } catch (e) {
       print('Error deleting chat room: $e');
     }
   }
 
   RoomCreat(context) {
+    isLoading.value = true;
     maxRoomNum++;
     if (maxRoomNum > 10) {
       maxRoomNum = 10.obs;
@@ -91,9 +99,11 @@ class FirebaseService extends GetxController {
       );
     }
     update();
+    isLoading.value = false;
   }
 
   Future<String> RoomTitle(int index) async {
+    isLoading.value = true;
     QuerySnapshot r = await FirebaseFirestore.instance
         .collection('users')
         .doc(id)
@@ -101,17 +111,21 @@ class FirebaseService extends GetxController {
         .orderBy('uploadTime', descending: true)
         .limit(1)
         .get();
+    isLoading.value = false;
     return r.docs.isNotEmpty ? r.docs.first.get('usertext') : '대화가 없습니다.';
   }
 
   Future<void> loadRoomTitles() async {
+    isLoading.value = true;
     for (int i = 0; i < roomTitles.length; i++) {
       final title = await RoomTitle(i);
       roomTitles[i] = title;
     }
+    isLoading.value = false;
   }
 
   loadRoomCount() async {
+    isLoading.value = true;
     int curMaxRoomNum = 0;
     for (int i = 0; i < 10; i++) {
       QuerySnapshot r = await FirebaseFirestore.instance
@@ -126,6 +140,7 @@ class FirebaseService extends GetxController {
       }
     }
     maxRoomNum.value = curMaxRoomNum;
+    isLoading.value = false;
   }
 
   Stream<DocumentSnapshot<Object?>> listenToChatRooms() {
