@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 class FirebaseService extends GetxController {
   var isLoading = false.obs;
   String id;
@@ -149,5 +152,27 @@ class FirebaseService extends GetxController {
 
   void ChatClear() {
     chattingList.clear();
+  }
+
+  Map<String, String> headers = {
+    "Authorization": "//",
+    "Content-Type": "application/json"
+  };
+
+  getChat(String chat) async {
+    isLoading.value = true;
+    final chatbody = jsonEncode(ChatAISendModel(chat).toJson());
+    final url = Uri.parse('https://api.openai.com/v1/chat/completions');
+    final response = await http.post(url, body: chatbody, headers: headers);
+    if (response.statusCode == 200) {
+      Map ss = jsonDecode(utf8.decode(response.bodyBytes));
+      String answer = {ss['choices'][0]['message']['content']}.toString();
+      answer = answer.substring(1, answer.length - 1);
+      isLoading.value = false;
+      return answer;
+    } else {
+      isLoading.value = false;
+      throw Error();
+    }
   }
 }
