@@ -7,13 +7,15 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:http/http.dart' as http;
 
 class LoginApi {
-  // final String url = 'https://';
-  // Future<String> createCustomToken(Map<String, dynamic> user) async {
-  //   final customTokenResponse = await http.post(Uri.parse(url), body: user);
-  //   return customTokenResponse.body;
-  // }
+  final String url =
+      'https://us-central1-copyui-82583.cloudfunctions.net/createCustomToken';
+  Future<String> createCustomToken(Map<String, dynamic> user) async {
+    final customTokenResponse = await http.post(Uri.parse(url), body: user);
+    return customTokenResponse.body;
+  }
 
   // 로그인 연동
   kakaoLogin() async {
@@ -77,11 +79,11 @@ class LoginApi {
 
     log('로그인 성공');
     //loginTokenInfo();
-    // final token = await createCustomToken({
-    //   'uid': user.id.toString(),
-    //   'displayName': name,
-    // });
-    // await auth.FirebaseAuth.instance.signInWithCustomToken(token);
+    final token = await createCustomToken({
+      'uid': user.id.toString(),
+      'displayName': name,
+    });
+    await auth.FirebaseAuth.instance.signInWithCustomToken(token);
     Get.off(() => GetBuilder<FirebaseService>(
           init: FirebaseService(
             id: id,
@@ -118,11 +120,11 @@ class LoginApi {
     final provider = await _googleSignIn.isSignedIn();
     if (provider) {
       await _googleSignIn.signOut();
-      await auth.FirebaseAuth.instance.signOut();
       log('로그아웃 성공, Google SDK에서 토큰 삭제');
       Get.offAll(() => const LoginScreen());
     } else {
       try {
+        await auth.FirebaseAuth.instance.signOut();
         await UserApi.instance.logout();
         log('로그아웃 성공, Kakao SDK에서 토큰 삭제');
         Get.offAll(() => const LoginScreen());
