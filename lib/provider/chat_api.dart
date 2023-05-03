@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import '../model/chat_model.dart';
 import 'package:http/http.dart' as http;
 
 class ChatAPIService {
   Map<String, String> headers = {
-    "Authorization": "//",
+    "Authorization": dotenv.env['CHAT_API_KEY']!,
     "Content-Type": "application/json"
   };
 
