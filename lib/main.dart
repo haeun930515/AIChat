@@ -5,6 +5,7 @@ import 'package:chatai/routes/app_pages.dart';
 import 'package:chatai/routes/app_routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -30,6 +31,9 @@ void main() async {
 
   // 카카오 로그인 해시 키 받는 함수
   hasykey();
+
+  // 키 초기화
+  await dotenv.load();
 
   FlutterNativeSplash.remove(); // 초기화가 끝나는 시점에 삽입
   runApp(
