@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.open.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
     package="com.example.chatai">
 
     <!-- 인터넷 사용 권한 설정 -->
@@ -27,8 +28,8 @@
         </intent>
     </queries>
    <application
-        android:label="chatai"
-        android:name="${applicationName}"
+        android:label="Chatai"
+        android:name="Chatai"
         android:icon="@mipmap/ic_launcher">
 
         <!-- 카카오 로그인 커스텀 URL 스킴 설정 -->

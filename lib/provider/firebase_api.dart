@@ -1,6 +1,7 @@
 import 'package:chatai/model/chat_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
 import 'dart:convert';
@@ -155,7 +156,7 @@ class FirebaseService extends GetxController {
   }
 
   Map<String, String> headers = {
-    "Authorization": "//",
+    'Authorization': dotenv.env['CHAT_API_KEY']!,
     "Content-Type": "application/json"
   };
 
